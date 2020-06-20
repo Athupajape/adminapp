@@ -12,13 +12,11 @@ class _FeedsPageState extends State<FeedsPage> {
   CurdMethods crudObj = CurdMethods();
   TextEditingController textInputController;
 
-
   @override
-  initState(){
-    textInputController=TextEditingController();
+  initState() {
+    textInputController = TextEditingController();
     super.initState();
   }
-
 
   Future<bool> addDialog(BuildContext context) async {
     return showDialog(
@@ -33,28 +31,28 @@ class _FeedsPageState extends State<FeedsPage> {
                   autofocus: true,
                   decoration: InputDecoration(hintText: 'Enter text'),
                   controller: textInputController,
-                  
+
                   // onChanged: (value) {
-                    
+
                   //   this.text = value;
-                    
+
                   // },
                 )
               ],
             ),
             actions: <Widget>[
-              
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  if(textInputController.text.isNotEmpty){
-                      crudObj.addData(this.textInputController.text).then((result) {
-                    dialogTrigger(context);
-                  }).catchError((e) {
-                    print(e);
-                  });
+                  if (textInputController.text.isNotEmpty) {
+                    crudObj
+                        .addData(this.textInputController.text)
+                        .then((result) {
+                      dialogTrigger(context);
+                    }).catchError((e) {
+                      print(e);
+                    });
                   }
-                  
                 },
                 child: Text('Add'),
               ),
@@ -62,17 +60,15 @@ class _FeedsPageState extends State<FeedsPage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   textInputController.clear();
-                  
                 },
                 child: Text('cancel'),
               ),
-               
             ],
           );
         });
   }
 
-  Future<bool> updateDialog(BuildContext context,selectedDoc) async {
+  Future<bool> updateDialog(BuildContext context, selectedDoc) async {
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -85,7 +81,6 @@ class _FeedsPageState extends State<FeedsPage> {
                   autofocus: true,
                   controller: textInputController,
                   decoration: InputDecoration(hintText: 'Enter text'),
-                  
                 )
               ],
             ),
@@ -93,15 +88,15 @@ class _FeedsPageState extends State<FeedsPage> {
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  if(textInputController.text.isNotEmpty){
-                  crudObj.updateData(selectedDoc,this.textInputController.text).then((result) {
-                    // dialogTrigger(context);
-                    
-                  }).catchError((e) {
-                    print(e);
-                  });
+                  if (textInputController.text.isNotEmpty) {
+                    crudObj
+                        .updateData(selectedDoc, this.textInputController.text)
+                        .then((result) {
+                      // dialogTrigger(context);
+                    }).catchError((e) {
+                      print(e);
+                    });
                   }
-                  
                 },
                 child: Text('Update'),
               ),
@@ -109,10 +104,9 @@ class _FeedsPageState extends State<FeedsPage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   textInputController.clear();
-                  
                 },
                 child: Text('cancel'),
-              ),  
+              ),
             ],
           );
         });
@@ -152,7 +146,10 @@ class _FeedsPageState extends State<FeedsPage> {
         ],
       ),
       body: StreamBuilder(
-          stream: Firestore.instance.collection('Adfeeds').orderBy('feed',descending:true).snapshots(),
+          stream: Firestore.instance
+              .collection('Adfeeds')
+              .orderBy('feed', descending: true)
+              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Text('No data');
@@ -171,19 +168,22 @@ class _FeedsPageState extends State<FeedsPage> {
                                 textAlign: TextAlign.start,
                               ),
                               FlatButton(
-                                      onPressed: () {
-                                        crudObj.deleteData(snapshot
-                                            .data.documents[index].documentID);
-                                      },
-                                      child: Text('Delete')),
+                                  onPressed: () {
+                                    crudObj.deleteData(snapshot
+                                        .data.documents[index].documentID);
+                                  },
+                                  child: Text('Delete')),
                               FlatButton(
-                                      onPressed: () {
-                                        updateDialog(context,snapshot.data.documents[index].documentID);
-                                      },
-                                      child: Text('Update Feed')),
+                                  onPressed: () {
+                                    updateDialog(
+                                        context,
+                                        snapshot
+                                            .data.documents[index].documentID);
+                                  },
+                                  child: Text('Update Feed')),
                             ],
                           )),
-                      );
+                    );
                   });
             }
           }),
