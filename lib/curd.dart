@@ -9,9 +9,9 @@ class CurdMethods{
     });
   }
 
-  getData() async{
-   return await Firestore.instance.collection('Adfeeds').orderBy('feed',descending:true).getDocuments();
-  }
+  // getData() async{
+  //  return await Firestore.instance.collection('Adfeeds').orderBy('feed',descending:true).getDocuments();
+  // }
 
   deleteData(docId) async{
     return await Firestore.instance.collection('Adfeeds').document(docId).delete().catchError((e){print(e);});

@@ -10,6 +10,15 @@ class FeedsPage extends StatefulWidget {
 class _FeedsPageState extends State<FeedsPage> {
   String text;
   CurdMethods crudObj = CurdMethods();
+  TextEditingController textInputController;
+
+
+  @override
+  initState(){
+    textInputController=TextEditingController();
+    super.initState();
+  }
+
 
   Future<bool> addDialog(BuildContext context) async {
     return showDialog(
@@ -21,10 +30,15 @@ class _FeedsPageState extends State<FeedsPage> {
             content: Column(
               children: <Widget>[
                 TextField(
+                  autofocus: true,
                   decoration: InputDecoration(hintText: 'Enter text'),
-                  onChanged: (value) {
-                    this.text = value;
-                  },
+                  controller: textInputController,
+                  
+                  // onChanged: (value) {
+                    
+                  //   this.text = value;
+                    
+                  // },
                 )
               ],
             ),
@@ -33,14 +47,24 @@ class _FeedsPageState extends State<FeedsPage> {
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-
-                  crudObj.addData(this.text).then((result) {
+                  if(textInputController.text.isNotEmpty){
+                      crudObj.addData(this.textInputController.text).then((result) {
                     dialogTrigger(context);
                   }).catchError((e) {
                     print(e);
                   });
+                  }
+                  
                 },
                 child: Text('Add'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  textInputController.clear();
+                  
+                },
+                child: Text('cancel'),
               ),
                
             ],
@@ -58,10 +82,10 @@ class _FeedsPageState extends State<FeedsPage> {
             content: Column(
               children: <Widget>[
                 TextField(
+                  autofocus: true,
+                  controller: textInputController,
                   decoration: InputDecoration(hintText: 'Enter text'),
-                  onChanged: (value) {
-                    this.text = value;
-                  },
+                  
                 )
               ],
             ),
@@ -69,15 +93,26 @@ class _FeedsPageState extends State<FeedsPage> {
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-
-                  crudObj.updateData(selectedDoc,this.text).then((result) {
+                  if(textInputController.text.isNotEmpty){
+                  crudObj.updateData(selectedDoc,this.textInputController.text).then((result) {
                     // dialogTrigger(context);
+                    
                   }).catchError((e) {
                     print(e);
                   });
+                  }
+                  
                 },
                 child: Text('Update'),
               ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  textInputController.clear();
+                  
+                },
+                child: Text('cancel'),
+              ),  
             ],
           );
         });
@@ -95,6 +130,7 @@ class _FeedsPageState extends State<FeedsPage> {
               FlatButton(
                   onPressed: () {
                     Navigator.of(context).pop();
+                    textInputController.clear();
                   },
                   child: Text('OK'))
             ],
