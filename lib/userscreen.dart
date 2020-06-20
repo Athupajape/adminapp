@@ -1,51 +1,6 @@
-// import 'package:flutter/material.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-
-// class UserScreen extends StatefulWidget {
-//   @override
-//   _UserScreenState createState() => _UserScreenState();
-// }
-
-// class _UserScreenState extends State<UserScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: StreamBuilder(
-//           stream: Firestore.instance.collection('Adfeeds').orderBy('feed',descending:true).snapshots(),
-//           builder: (context, snapshot) {
-//             if (!snapshot.hasData) {
-//               return Text('No data');
-//             } else {
-//               return ListView.builder(
-//                   itemCount: snapshot.data.documents.length,
-//                   itemBuilder: (context, index) {
-                    // DocumentSnapshot ds = snapshot.data.documents[index];
-//                     return Card(
-//                       child: Container(
-//                           height: 50,
-//                           child: Row(
-//                             children: <Widget>[
-//                               Text(
-//                                 snapshot.data.documents[index]['feed'],
-//                                 textAlign: TextAlign.start,
-//                               ),
-                              
-//                             ],
-//                           )),
-//                       );
-//                   });
-//             }
-//           }),
-
-//     );
-//   }
-// }
-
-
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'dart:async';
 
 
 class UserScreen extends StatefulWidget {
@@ -58,20 +13,35 @@ class _UserScreenState extends State<UserScreen> {
   QuerySnapshot feeds;
 
   getData() async{
-   return await Firestore.instance.collection('Adfeeds').orderBy('feed',descending:true).getDocuments();
+   return await Firestore.instance.collection('Adfeeds').orderBy('created',descending:true).getDocuments();
   }
+  initTimer(){
+ getData().then((results){
+      setState((){
+        feeds=results;
+      });
+    });
 
-  @override
-  void initState(){
-    // const onesecond=const Duration(seconds:25),
-    // Timer.periodic(onesecond,(Timer t)=>)
-    
-    getData().then((results){
+    Timer.periodic(Duration(minutes: 10),(Timer t){
+      getData().then((results){
       setState((){
         feeds=results;
       });
     });
     
+    });
+    
+  }
+
+  @override
+  void initState(){
+    super.initState();
+
+    initTimer();
+  }
+
+  void dispose(){
+    super.dispose();
   }
 
 
@@ -123,29 +93,3 @@ class _UserScreenState extends State<UserScreen> {
 
 
 
-// StreamBuilder(
-//           stream: Firestore.instance.collection('Adfeeds').orderBy('feed',descending:true).snapshots(),
-//           builder: (context, snapshot) {
-//             if (!snapshot.hasData) {
-//               return Text('No data');
-//             } else {
-//               return ListView.builder(
-//                   itemCount: snapshot.data.documents.length,
-//                   itemBuilder: (context, index) {
-//                     // DocumentSnapshot ds = snapshot.data.documents[index];
-//                     return Card(
-//                       child: Container(
-//                           height: 50,
-//                           child: Row(
-//                             children: <Widget>[
-//                               Text(
-//                                 snapshot.data.documents[index]['feed'],
-//                                 textAlign: TextAlign.start,
-//                               ),
-                              
-//                             ],
-//                           )),
-//                       );
-//                   });
-//             }
-//           }),

@@ -147,9 +147,7 @@ class _FeedsPageState extends State<FeedsPage> {
       ),
       body: StreamBuilder(
           stream: Firestore.instance
-              .collection('Adfeeds')
-              .orderBy('feed', descending: true)
-              .snapshots(),
+              .collection('Adfeeds').orderBy('created',descending:true).snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Text('No data');

@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CurdMethods{
 
   Future<void> addData(feed) async{
-    Firestore.instance.collection('Adfeeds').add({'feed':feed}).catchError((e){
+    Firestore.instance.collection('Adfeeds').add({'feed':feed,'created':FieldValue.serverTimestamp()}).catchError((e){
       print(e);
     });
   }
