@@ -11,6 +11,7 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
  
   QuerySnapshot feeds;
+  Timer timer;
 
   getData() async{
    return await Firestore.instance.collection('Adfeeds').orderBy('created',descending:true).getDocuments();
@@ -22,7 +23,7 @@ class _UserScreenState extends State<UserScreen> {
       });
     });
 
-    Timer.periodic(Duration(minutes: 10),(Timer t){
+    timer=Timer.periodic(Duration(minutes: 10),(Timer timer){
       getData().then((results){
       setState((){
         feeds=results;
@@ -42,6 +43,7 @@ class _UserScreenState extends State<UserScreen> {
 
   void dispose(){
     super.dispose();
+    timer.cancel();
   }
 
 
